@@ -1,12 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
-from blog.models import Post
-from django.shortcuts import render, get_object_or_404
+from .models import Post
 from .forms import PostForm
 
 
 def post_list(request):
-    posts = Post.objects.filter(published_date_lte=timezone.now().order_by('published_date'))
+    posts = Post.objects.all()
     return render(request, 'blog/post_list.html', {'posts': posts})
 
 
@@ -36,7 +35,7 @@ def post_edit(request, pk):
              post.author = request.user
              post.published_date = timezone.now()
              post.save()
-             return redirect('blog.views.post_d etail', pk=post.pk)
+             return redirect('blog.views.post_detail', pk=post.pk)
      else:
          form = PostForm(instance=post)
      return render(request, 'blog/post_edit.html', {'form': form})
